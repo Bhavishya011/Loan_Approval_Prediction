@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0, shrink-to-fit=no">
     <title>Loan Prediction Result | AI Financial Assessment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" as="style">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
+        /* Base styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
         /* Optimized animations */
         @keyframes float {
             0%, 100% { transform: translateY(0); }
@@ -38,57 +44,57 @@
         }
         .card-hover {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            will-change: transform;
         }
         .card-hover:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 15px -5px rgba(0, 0, 0, 0.1);
         }
-    </style>
-    <script>
-        // Load Tailwind conditionally
-        if (window.matchMedia('(min-width: 768px)').matches) {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.tailwindcss.com';
-            script.onload = function() {
-                tailwind.config = {
-                    theme: {
-                        extend: {
-                            colors: {
-                                primary: '#8F87F1',
-                                secondary: '#C68EFD',
-                                accent: '#E9A5F1',
-                                light: '#FED2E2',
-                                dark: '#2E2D4D',
-                                approved: '#D1F7E6',
-                                approvedText: '#0E6245',
-                                rejected: '#FFE8E8',
-                                rejectedText: '#D12953',
-                            },
-                            fontFamily: {
-                                sans: ['Inter', 'sans-serif'],
-                            }
-                        }
-                    }
-                };
-            };
-            document.head.appendChild(script);
+        
+        /* Mobile-specific styles */
+        @media (max-width: 767px) {
+            .result-card {
+                padding: 1.5rem !important;
+            }
+            .result-heading {
+                font-size: 1.8rem !important;
+            }
+            .factors-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .summary-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .emi-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-buttons a {
+                width: 100%;
+            }
         }
-    </script>
+        
+        /* Ensure tap targets are large enough */
+        .tap-target {
+            min-width: 44px;
+            min-height: 44px;
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
-    <!-- Simplified background elements -->
+<body class="bg-gray-50">
+    <!-- Background elements -->
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="blob" style="top:20%;left:10%;background:#8F87F1"></div>
         <div class="blob" style="bottom:20%;right:10%;background:#E9A5F1;animation-delay:2s"></div>
     </div>
 
-    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10">
+    <div class="max-w-4xl mx-auto px-4 py-12 relative z-10 w-full">
         <!-- Result Card -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden animate-in">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden animate-in result-card">
             <!-- Header -->
             <div class="result-gradient text-white px-8 py-6">
-                <h1 class="text-3xl font-bold">Loan Prediction Result</h1>
+                <h1 class="text-3xl font-bold result-heading">Loan Prediction Result</h1>
                 <p class="text-light"> financial assessment</p>
             </div>
 
@@ -98,9 +104,6 @@
                     <div class="flex flex-col md:flex-row items-center justify-between">
                         <div class="mb-6 md:mb-0 text-left">
                             <h2 class="text-3xl font-bold mb-2">Loan Status: {{ result.prediction }}</h2>
-                            <div class="text-2xl font-semibold">
-                                Approval Probability: <span class="font-bold">{{ result.probability }}</span>
-                            </div>
                         </div>
                         <div class="text-6xl {% if result.prediction == 'Approved' %}text-green-500{% else %}text-red-500{% endif %}">
                             {% if result.prediction == 'Approved' %}
@@ -112,53 +115,6 @@
                     </div>
                 </div>
 
-                {% if result.prediction == 'Not Approved' %}
-                <div class="bg-light border border-accent rounded-xl p-6 mb-8 animate-in" style="animation-delay:0.1s">
-                    <div class="flex items-start">
-                        <div class="flex-shrink-0 mr-4 text-accent">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                            </svg>
-                        </div>
-                        <div>
-                            <h3 class="text-xl font-bold text-dark mb-2">Alternative Loan Options</h3>
-                            <p class="text-gray-700 mb-4">Based on your financial profile, here are adjusted loan amounts you may qualify for:</p>
-                            
-                            {% set max_affordable = (result.input_data[' income_annum'] * 0.4 * result.input_data[' loan_term']) / (1 + (10.5/100 * result.input_data[' loan_term'])) %}
-                            {% set suggested_loan = [max_affordable, result.input_data[' residential_assets_value'] * 0.7, result.input_data[' income_annum'] * 3] | min %}
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                <div class="bg-white p-4 rounded-lg border border-gray-200">
-                                    <p class="text-sm text-gray-500 mb-1">Suggested Amount</p>
-                                    <p class="text-2xl font-bold text-primary">₹{{ "{:,.0f}".format(suggested_loan) }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Based on 40% income commitment</p>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg border border-gray-200">
-                                    <p class="text-sm text-gray-500 mb-1">With Co-signer</p>
-                                    <p class="text-2xl font-bold text-primary">₹{{ "{:,.0f}".format(suggested_loan * 1.5) }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">With qualified co-applicant</p>
-                                </div>
-                                <div class="bg-white p-4 rounded-lg border border-gray-200">
-                                    <p class="text-sm text-gray-500 mb-1">Secured Loan</p>
-                                    <p class="text-2xl font-bold text-primary">₹{{ "{:,.0f}".format(result.input_data[' residential_assets_value'] * 0.7) }}</p>
-                                    <p class="text-xs text-gray-500 mt-1">Against property collateral</p>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <h4 class="font-medium text-dark mb-2">How to improve approval chances:</h4>
-                                <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1">
-                                    <li>Reduce requested amount by {{ ((result.input_data[' loan_amount'] - suggested_loan)/result.input_data[' loan_amount'] * 100)|round|int }}%</li>
-                                    <li>Improve your CIBIL score (currently {{ result.input_data[' cibil_score'] }})</li>
-                                    <li>Add a co-applicant with good credit history</li>
-                                    <li>Provide collateral for secured loan</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
                 <!-- Key Factors -->
                 <div class="mb-10 animate-in" style="animation-delay:0.1s">
                     <h3 class="text-2xl font-bold text-dark mb-6 flex items-center">
@@ -168,7 +124,7 @@
                         Key Decision Factors
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 factors-grid">
                         <!-- CIBIL Score Card -->
                         <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 animate-in">
                             <div class="flex items-center mb-4">
@@ -231,8 +187,8 @@
                         {% set R = annual_interest_rate / 12 / 100 %}
                         {% set N = result.input_data[' loan_term'] * 12 %}
                         {% set emi = (P * R * (1 + R)**N) / ((1 + R)**N - 1) %}
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 emi-grid">
                             <div>
                                 <div class="flex justify-between items-center mb-4">
                                     <span class="text-gray-600">Loan Amount:</span>
@@ -302,7 +258,7 @@
                         Application Summary
                     </h3>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 summary-grid">
                         <!-- Personal Card -->
                         <div class="bg-white border border-gray-100 rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-200 transform hover:-translate-y-1 animate-in">
                             <div class="flex items-center mb-4">
@@ -385,8 +341,8 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 animate-in" style="animation-delay:0.4s">
-                    <a href="/" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-white font-bold rounded-full transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl text-center">
+                <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4 animate-in action-buttons" style="animation-delay:0.4s">
+                    <a href="/" class="px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-secondary hover:to-accent text-white font-bold rounded-full transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl text-center tap-target">
                         New Prediction
                     </a>
                 </div>
@@ -394,13 +350,29 @@
         </div>
     </div>
 
+    <!-- Load Tailwind unconditionally -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Load Tailwind if not already loaded
-        if (typeof tailwind === 'undefined' && window.matchMedia('(max-width: 767px)').matches) {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.tailwindcss.com';
-            document.head.appendChild(script);
-        }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8F87F1',
+                        secondary: '#C68EFD',
+                        accent: '#E9A5F1',
+                        light: '#FED2E2',
+                        dark: '#2E2D4D',
+                        approved: '#D1F7E6',
+                        approvedText: '#0E6245',
+                        rejected: '#FFE8E8',
+                        rejectedText: '#D12953',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        };
     </script>
 </body>
 </html>
